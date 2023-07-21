@@ -9,6 +9,8 @@ import { publicRequest } from "../utils/requestMethod";
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,17 +22,18 @@ function Register() {
   // register (create) a user
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsFetching(true);
 
     const fetchUser = async () => {
       try {
         const res = await publicRequest.post("/users", formData);
-
-        if (res.data) {
-          alert("Congratulation! You are registered now.");
-          navigate("/login");
-        }
+        setIsFetching(false);
+        alert("Congratulation! You are registered now.");
+        navigate("/login");
       } catch (error) {
         console.log(error);
+        setIsFetching(false);
+        setError(error);
       }
     };
 
@@ -123,9 +126,9 @@ function Register() {
                   </div>
                 </div>
 
-                {false && (
+                {error && (
                   <span className="text-center text-[15px] lg:text-base text-red-600">
-                    Error Messages
+                    {error.response.data.message}
                   </span>
                 )}
 
@@ -133,7 +136,7 @@ function Register() {
                   type="submit"
                   className="bg-black/95 text-white rounded sm:p-2 active:scale-95 transition-transform duration-75 ease-linear flex items-center justify-center min-h-[34px] sm:min-h-[40px] md:hover:bg-red-600 md:cursor-pointer lg:text-lg lg:min-h-[44px] mt-[2px]"
                 >
-                  {false ? (
+                  {isFetching ? (
                     <ImSpinner9 className="animate-spin text-xl md:text-2xl" />
                   ) : (
                     "Register"

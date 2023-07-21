@@ -21,6 +21,8 @@ function Profile() {
   const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [formData, setFormData] = useState({});
   const [user, setUser] = useState({});
+  const [error, setError] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   // getting user ID from url
   const { userId } = useParams();
@@ -46,14 +48,24 @@ function Profile() {
   };
 
   // update user data
-  const updateUser = async (e) => {
+  const updateUser = (e) => {
     e.preventDefault();
-    try {
-      const res = await publicRequest.put("/users/" + userId, formData);
-      setUser(res.data);
-    } catch (error) {
-      console.log(error);
-    }
+    setIsFetching(true);
+
+    const getUpdatedUser = async () => {
+      try {
+        const res = await publicRequest.put("/users/" + userId, formData);
+        setUser(res.data);
+        setIsFetching(false);
+        setShowForm(false);
+      } catch (error) {
+        console.log(error);
+        setIsFetching(false);
+        setError(true);
+      }
+    };
+
+    getUpdatedUser();
   };
 
   // delete user data
@@ -294,9 +306,9 @@ function Profile() {
                 className="border border-gray-400 rounded outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2"
               />
 
-              {false && (
+              {error && (
                 <span className="text-center text-[15px] lg:text-base text-red-600">
-                  Error Messages
+                  Provided email is already registered.
                 </span>
               )}
 
@@ -304,7 +316,7 @@ function Profile() {
                 type="submit"
                 className="bg-red-600 text-white rounded sm:p-2 active:scale-95 transition-transform duration-75 ease-linear flex items-center justify-center min-h-[34px] sm:min-h-[40px] md:hover:bg-black/95 md:cursor-pointer lg:text-lg lg:min-h-[44px] mt-[2px]"
               >
-                {false ? (
+                {isFetching ? (
                   <ImSpinner9 className="animate-spin text-xl md:text-2xl" />
                 ) : (
                   "Update"

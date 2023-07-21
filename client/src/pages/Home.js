@@ -28,7 +28,7 @@ function Home() {
     <>
       <Header />
 
-      <Wrapper className="border-2 min-h-[calc(100vh-50px)] md:min-h-[calc(100vh-70px)]">
+      <Wrapper className="min-h-[calc(100vh-50px)] md:min-h-[calc(100vh-70px)]">
         <div className=" flex flex-wrap min-[1265px]:gap-4 gap-3 justify-center my-5  min-[426px]:my-7 ">
           {userdata.map((user) => (
             <Card key={user._id} user={user} />
