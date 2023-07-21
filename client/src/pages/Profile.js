@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { BsCameraFill } from "react-icons/bs";
 import { ImSpinner9 } from "react-icons/im";
+import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import Wrapper from "../components/Wrapper";
 import { publicRequest } from "../utils/requestMethod";
-import { redirect, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
-
-import { MdDeleteForever } from "react-icons/md";
+import Wrapper from "../components/Wrapper";
 
 const listItems = [
   { id: 1, name: "User Details" },
@@ -25,9 +24,7 @@ function Profile() {
 
   // getting user ID from url
   const { userId } = useParams();
-
   const navigate = useNavigate();
-  console.log(formData);
 
   // fetching user data
   useEffect(() => {
@@ -104,11 +101,11 @@ function Profile() {
 
           <div className="absolute top-[35%] left-1/2 -translate-x-1/2 p-1">
             <div className="relative w-[85px] h-[85px] sm:w-[120px] sm:h-[120px] md:w-[150px] md:h-[150px] lg:w-[180px] lg:h-[180px] mx-auto border-2 border-red-600 rounded-full">
-              <div className="w-full h-full  rounded-full overflow-hidden">
+              <div className="w-full h-full rounded-full overflow-hidden">
                 <img
                   src={user?.profilePic ? user.profilePic : "/nopic.png"}
                   alt=""
-                  className="object-cover"
+                  className="w-full h-auto object-cover"
                 />
               </div>
 
@@ -123,7 +120,7 @@ function Profile() {
               </label>
             </div>
 
-            <h2 className="min-w-max mx-auto text-lg sm:text-xl md:text-2xl lg:text-[26px] lg:font-bold font-semibold mt-1 md:mt-[6px] lg:mt-2">
+            <h2 className="min-w-max mx-auto text-lg text-center sm:text-xl md:text-2xl lg:text-[26px] lg:font-bold font-semibold mt-1 md:mt-[6px] lg:mt-2">
               {user?.username}
             </h2>
           </div>
@@ -167,6 +164,8 @@ function Profile() {
                 {listItemClicked}
               </h3>
 
+              {/* Edit and Delete icons start */}
+
               {listItemClicked === "User Details" && (
                 <div className="flex items-center justify-center gap-[15px]">
                   <button
@@ -186,6 +185,8 @@ function Profile() {
                   </button>
                 </div>
               )}
+
+              {/* Edit and Delete icons end */}
             </div>
 
             {listItemClicked === "User Details" ? (
@@ -208,8 +209,6 @@ function Profile() {
                 <img
                   src="/emptyCart.png"
                   alt=""
-                  width={350}
-                  height={350}
                   className="mt-2 w-52 lg:w-64"
                 />
 
