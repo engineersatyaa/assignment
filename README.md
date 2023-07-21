@@ -9,7 +9,11 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### Features
 
-- Redux for state management and local storage.
+- Pagination
+- Redux for state management.
+- Mobile first design.
+- Redux Persist for local storage.
+- Responsive
 
 
  In order to start Server you have to run below script from your project directory.
@@ -26,3 +30,4 @@ or
 ### Features
 
 - CRUD operations
+- Bcrypt for password hashing.
