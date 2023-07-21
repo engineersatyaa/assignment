@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoHome } from "react-icons/io5";
-import { FaSearchPlus, FaUserCircle } from "react-icons/fa";
+import { FaSearchPlus, FaUserCheck, FaUserCircle } from "react-icons/fa";
+import { RiLoginCircleFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import Wrapper from "./Wrapper";
 
@@ -19,6 +20,17 @@ const menuData = [
     name: "Search",
     icon: <FaSearchPlus size={20} />,
     url: "/search",
+  },
+  {
+    name: "Register",
+    icon: <FaUserCheck size={20} />,
+    url: "/register",
+  },
+
+  {
+    name: "Login",
+    icon: <RiLoginCircleFill size={24} className="-mx-[2px]" />,
+    url: "/login",
   },
 ];
 

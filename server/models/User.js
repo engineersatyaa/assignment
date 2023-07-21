@@ -7,6 +7,12 @@ const userSchema = new mongoose.Schema(
       required: [true, "Username is required"],
     },
 
+    password: {
+      type: String,
+      minLength: 8,
+      required: [true, "Password is required"],
+    },
+
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -26,13 +32,15 @@ const userSchema = new mongoose.Schema(
 
     profilePic: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dqy9nudgb/image/upload/v1678469764/Millennials/igzjzbncjrc0cbsqot5a.webp",
     },
 
-    // role: {
-    //   type: String,
-    //   enum: ["user", "admin"],
-    // },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
   },
 
   { timestamps: true }

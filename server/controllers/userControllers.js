@@ -1,16 +1,6 @@
+const customError = require("../utils/customError");
 const User = require("../models/User");
-
-// create a new user
-const newUser = async (req, res, next) => {
-  try {
-    const newUser = new User(req.body);
-    const savedUser = await newUser.save();
-
-    res.status(201).json(savedUser);
-  } catch (error) {
-    next(error);
-  }
-};
+const bcrypt = require("bcrypt");
 
 // get a user
 const getUser = async (req, res, next) => {
@@ -26,7 +16,7 @@ const getUser = async (req, res, next) => {
 // get all users
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find().sort({ createdAt: -1 });
 
     res.status(200).json(users);
   } catch (error) {
@@ -62,4 +52,70 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { newUser, getUser, getAllUsers, updateUser, deleteUser };
+//------------------ Auth -----------------------------------
+
+// create (register) a new user
+const register = async (req, res, next) => {
+  try {
+    const isUserAlreadyRegistered = await User.findOne({
+      email: req.body.email,
+    });
+
+    if (isUserAlreadyRegistered)
+      return next(
+        customError(
+          400,
+          `Someone is already registered with  " ${req.body.email} "`
+        )
+      );
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
+
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: hash,
+    });
+
+    const savedUser = await newUser.save();
+
+    const { role, password, ...other } = savedUser._doc;
+
+    res.status(201).json(other);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// login a user
+const login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) return next(customError(404, "Incorrect Email."));
+
+    const isPasswordCorrect = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
+    if (!isPasswordCorrect)
+      return next(customError(401, "Incorrect Password."));
+
+    const { password, role, ...other } = user._doc;
+
+    res.status(200).json(other);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  getUser,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+};

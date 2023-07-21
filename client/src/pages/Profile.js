@@ -46,7 +46,8 @@ function Profile() {
   };
 
   // update user data
-  const updateUser = async () => {
+  const updateUser = async (e) => {
+    e.preventDefault();
     try {
       const res = await publicRequest.put("/users/" + userId, formData);
       setUser(res.data);
@@ -255,7 +256,7 @@ function Profile() {
             {/* Form start */}
 
             <form
-              onSubmit={updateUser}
+              onSubmit={(e) => updateUser(e)}
               className="flex flex-col gap-2 sm:gap-[10px]"
             >
               <input

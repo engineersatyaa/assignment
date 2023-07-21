@@ -1,15 +1,13 @@
 const router = require("express").Router();
 
 const {
-  newUser,
+  register,
+  login,
   getUser,
   getAllUsers,
   updateUser,
   deleteUser,
 } = require("../controllers/userControllers");
-
-// create a new user
-router.post("/", newUser);
 
 // get a user
 router.get("/:userId", getUser);
@@ -22,5 +20,13 @@ router.put("/:userId", updateUser);
 
 // delete a user
 router.delete("/:userId", deleteUser);
+
+//-------------- auth ----------------------------
+
+// create (register) a new user
+router.post("/", register);
+
+// login a user
+router.post("/login", login);
 
 module.exports = router;
