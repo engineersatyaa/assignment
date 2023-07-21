@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { IoHome } from "react-icons/io5";
 import { FaSearchPlus, FaUserCheck, FaUserCircle } from "react-icons/fa";
 import { RiLoginCircleFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -7,11 +6,6 @@ import Wrapper from "./Wrapper";
 import { useSelector } from "react-redux";
 
 const menuData = [
-  {
-    name: "Home",
-    icon: <IoHome size={20} />,
-    url: "/",
-  },
   {
     name: "Profile",
     icon: <FaUserCircle size={20} />,
@@ -40,8 +34,6 @@ function Header() {
 
   const user = useSelector((state) => state.user.currentUser);
 
-  console.log(user);
-
   // to prevent scrolling on phone menu
   showPhoneMenu
     ? (document.body.style.overflowY = "hidden")
@@ -67,7 +59,7 @@ function Header() {
         {/* Navbar block start */}
 
         <nav>
-          <ul className="hidden md:flex items-center gap-7 text-lg font-medium text-white">
+          <ul className="hidden md:flex items-center gap-5 lg:gap-7 lg:text-lg text-base font-medium text-white">
             {menuData.map((menu, index) => (
               <li key={index}>
                 <Link

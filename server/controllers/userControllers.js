@@ -13,12 +13,20 @@ const getUser = async (req, res, next) => {
   }
 };
 
-// get all users
+// get all users (pagination)
 const getAllUsers = async (req, res, next) => {
-  try {
-    const users = await User.find().sort({ createdAt: -1 });
+  let page = Number(req.query.page);
+  let limit = Number(req.query.limit);
 
-    res.status(200).json(users);
+  try {
+    const usersList = await User.find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const totalDocuments = await User.countDocuments({});
+
+    res.status(200).json({ usersList, totalDocuments });
   } catch (error) {
     next(error);
   }
