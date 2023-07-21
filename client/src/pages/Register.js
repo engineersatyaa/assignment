@@ -27,9 +27,11 @@ function Register() {
     const fetchUser = async () => {
       try {
         const res = await publicRequest.post("/users", formData);
-        setIsFetching(false);
-        alert("Congratulation! You are registered now.");
-        navigate("/login");
+        if (res.data) {
+          setIsFetching(false);
+          alert("Congratulation! You are registered now.");
+          navigate("/login");
+        }
       } catch (error) {
         console.log(error);
         setIsFetching(false);
