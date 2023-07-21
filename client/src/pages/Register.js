@@ -18,19 +18,25 @@ function Register() {
   };
 
   // register (create) a user
-  const register = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await publicRequest.post("/users/", formData);
 
-      if (res.data) {
-        alert("Congratulation! You are registered now.");
-        navigate("/login");
+    const fetchUser = async () => {
+      try {
+        const res = await publicRequest.post("/users", formData);
+
+        if (res.data) {
+          alert("Congratulation! You are registered now.");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    };
+
+    fetchUser();
   };
+
   return (
     <div
       style={{ backgroundImage: "url('/bg.jpg')" }}
@@ -70,7 +76,7 @@ function Register() {
               {/* Form top block start */}
 
               <form
-                onSubmit={(e) => register(e)}
+                onSubmit={handleSubmit}
                 className="flex flex-col gap-2 sm:gap-[10px]"
               >
                 <div className="flex items-center border border-gray-400 rounded  overflow-hidden bg-white min-h-[34px]">
@@ -78,8 +84,6 @@ function Register() {
                     type="text"
                     placeholder="Full Name"
                     name="username"
-                    pattern="[a-zA-Z][a-zA-Z ]*[a-zA-Z]$"
-                    title="Numbers,Special Characters and Spaces at the start or end are not allowed."
                     required
                     onChange={(e) => handleFormData(e)}
                     className="w-full outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2"
@@ -88,11 +92,9 @@ function Register() {
 
                 <div className="flex items-center border border-gray-400 rounded overflow-hidden  bg-white min-h-[34px]">
                   <input
-                    type="text"
+                    type="email"
                     name="email"
                     placeholder="Email Address"
-                    pattern="^(?:\d{10}|\w+@\w+\.\w{2,3})$"
-                    title="Valid E-mail or Phone Number of 10 digit without country code."
                     required
                     onChange={(e) => handleFormData(e)}
                     className="w-full outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2 "
@@ -104,8 +106,6 @@ function Register() {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,}$"
-                    title="Your password must include at least 1 Uppercase and Lowercase letter, 1 Number, 1 Special Character and a length of minimum 8 characters."
                     required
                     onChange={(e) => handleFormData(e)}
                     className="w-full outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2"

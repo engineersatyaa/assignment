@@ -4,6 +4,7 @@ import { FaSearchPlus, FaUserCheck, FaUserCircle } from "react-icons/fa";
 import { RiLoginCircleFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import Wrapper from "./Wrapper";
+import { useSelector } from "react-redux";
 
 const menuData = [
   {
@@ -14,12 +15,12 @@ const menuData = [
   {
     name: "Profile",
     icon: <FaUserCircle size={20} />,
-    url: "/profile/userId",
+    url: "profile",
   },
   {
     name: "Search",
     icon: <FaSearchPlus size={20} />,
-    url: "/search",
+    url: "/",
   },
   {
     name: "Register",
@@ -37,11 +38,14 @@ const menuData = [
 function Header() {
   const [showPhoneMenu, setShowPhoneMenu] = useState(false);
 
+  const user = useSelector((state) => state.user.currentUser);
+
+  console.log(user);
+
+  // to prevent scrolling on phone menu
   showPhoneMenu
-    ? typeof document !== "undefined" &&
-      (document.body.style.overflowY = "hidden")
-    : typeof document !== "undefined" &&
-      (document.body.style.overflowY = "auto");
+    ? (document.body.style.overflowY = "hidden")
+    : (document.body.style.overflowY = "auto");
 
   return (
     <header className="w-full h-[50px] md:h-[70px] bg-red-600 flex items-center justify-between sticky top-0 z-10 transition-transform duration-300 ">
@@ -67,7 +71,9 @@ function Header() {
             {menuData.map((menu, index) => (
               <li key={index}>
                 <Link
-                  to={menu.url}
+                  to={
+                    menu.url === "profile" ? `/profile/${user._id}` : menu.url
+                  }
                   className="flex items-center justify-center gap-2 hover:text-black"
                 >
                   {menu.icon}
@@ -90,7 +96,7 @@ function Header() {
           {menuData.map((menu, index) => (
             <li key={index}>
               <Link
-                to={menu.url}
+                to={menu.url === "profile" ? `/profile/${user._id}` : menu.url}
                 onClick={() => setShowPhoneMenu(false)}
                 className={`flex items-center gap-4 p-3 font-medium text-sm  border-t border-white/10 ${
                   menu.name === "Home" && "border-t-0"
@@ -110,12 +116,12 @@ function Header() {
 
           <div className="w-8 h-8 ml-1 md:w-11 md:h-11 md:mr-[2px] rounded-full overflow-hidden">
             <Link
-              to="/user_profile/userId"
+              to={`/profile/${user._id}`}
               className="flex"
               onClick={() => setShowPhoneMenu(false)}
             >
               <img
-                src="/nopic.png"
+                src={user?.profilePic ? user.profilePic : "/nopic.png"}
                 alt=""
                 className="w-full h-full object-cover"
               />

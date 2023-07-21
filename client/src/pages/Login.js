@@ -1,12 +1,53 @@
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 import { ImSpinner9 } from "react-icons/im";
 import { IoHome } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Wrapper from "../components/Wrapper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { publicRequest } from "../utils/requestMethod";
+import {
+  fetchingFailure,
+  fetchingStart,
+  fetchingSuccess,
+} from "../redux/userSlice";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const { error, isFetching } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // To clear persisted error data in userSlice's initialState on refresh page.
+  useEffect(() => {
+    dispatch(fetchingFailure(null));
+  }, [dispatch]);
+
+  // getting data from form
+  const handleFormData = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // fetching user data on login
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const fetchUser = async () => {
+      dispatch(fetchingStart());
+      try {
+        const res = await publicRequest.post("/users/login", formData);
+
+        dispatch(fetchingSuccess(res.data));
+        navigate("/");
+      } catch (error) {
+        dispatch(fetchingFailure(error.response.data));
+      }
+    };
+
+    fetchUser();
+  };
 
   return (
     <div
@@ -46,13 +87,18 @@ function Login() {
             <div className="bg-white/80 p-3 sm:p-4 rounded-md ">
               {/* Form top block start */}
 
-              <form className="flex flex-col gap-2 sm:gap-[10px]">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-2 sm:gap-[10px]"
+              >
                 <div className="flex items-center border border-gray-400 rounded overflow-hidden bg-white min-h-[34px]">
                   <input
                     type="text"
+                    name="email"
                     placeholder="Email"
                     required
                     autoComplete="off"
+                    onChange={(e) => handleFormData(e)}
                     className="w-full outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2 "
                   />
                 </div>
@@ -60,8 +106,10 @@ function Login() {
                 <div className="flex items-center border border-gray-400 rounded overflow-hidden bg-white min-h-[34px]">
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Password"
                     required
+                    onChange={(e) => handleFormData(e)}
                     className="w-full outline-none text-[15px] lg:text-base px-[6px] py-1 sm:px-[10px] sm:py-2"
                   />
 
@@ -77,9 +125,9 @@ function Login() {
                   </div>
                 </div>
 
-                {false && (
+                {error && (
                   <span className="text-center text-[15px] lg:text-base text-red-600">
-                    Error Messages
+                    {error.message}
                   </span>
                 )}
 
@@ -87,7 +135,7 @@ function Login() {
                   type="submit"
                   className="bg-black/95 text-white rounded sm:p-2 active:scale-95 transition-transform duration-75 ease-linear flex items-center justify-center min-h-[34px] sm:min-h-[40px] md:hover:bg-red-600 md:cursor-pointer lg:text-lg lg:min-h-[44px] mt-[2px]"
                 >
-                  {false ? (
+                  {isFetching ? (
                     <ImSpinner9 className="animate-spin text-xl md:text-2xl" />
                   ) : (
                     "Login"
