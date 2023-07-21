@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IoSearch, IoHome } from "react-icons/io5";
+import { IoHome } from "react-icons/io5";
 import { FaSearchPlus, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Wrapper from "./Wrapper";
@@ -38,7 +38,7 @@ function Header() {
 
         <h1 className="text-[22px] md:text-[35px] min-[321px]:text-[28px] text-white font-bold min-w-max">
           <Link
-            href="/"
+            to={"/"}
             className="flex md:hover:text-black md:drop-shadow-[5px_5px_2px_rgba(0,0,0,0.3)]"
             onClick={() => setShowPhoneMenu(false)}
           >
@@ -55,7 +55,7 @@ function Header() {
             {menuData.map((menu, index) => (
               <li key={index}>
                 <Link
-                  href={menu.url}
+                  to={menu.url}
                   className="flex items-center justify-center gap-2 hover:text-black"
                 >
                   {menu.icon}
@@ -78,7 +78,7 @@ function Header() {
           {menuData.map((menu, index) => (
             <li key={index}>
               <Link
-                href={menu.url}
+                to={menu.url}
                 onClick={() => setShowPhoneMenu(false)}
                 className={`flex items-center gap-4 p-3 font-medium text-sm  border-t border-white/10 ${
                   menu.name === "Home" && "border-t-0"
@@ -98,7 +98,7 @@ function Header() {
 
           <div className="w-8 h-8 ml-1 md:w-11 md:h-11 md:mr-[2px] rounded-full overflow-hidden">
             <Link
-              href="/user_profile/userId"
+              to="/user_profile/userId"
               className="flex"
               onClick={() => setShowPhoneMenu(false)}
             >

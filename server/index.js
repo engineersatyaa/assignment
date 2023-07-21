@@ -3,6 +3,7 @@ const app = express();
 
 require("dotenv").config();
 const PORT = process.env.PORT || 4040;
+const cors = require("cors");
 
 const userRoute = require("./routes/userRoutes");
 
@@ -30,7 +31,7 @@ mongoose.connection.on("disconnected", () => {
 });
 
 //========== Middlewares ==========================
-
+app.use(cors());
 app.use(express.json());
 app.use("/users", userRoute);
 
