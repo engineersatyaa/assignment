@@ -31,7 +31,7 @@ mongoose.connection.on("disconnected", () => {
 
 //========== Middlewares ==========================
 
-// app.use(express.json());
+app.use(express.json());
 app.use("/users", userRoute);
 
 //========== Error Handler Middleware ==============
@@ -44,6 +44,7 @@ app.use((err, req, res, next) => {
     success: false,
     status: errStatus,
     message: errMessage,
+    stack: process.env.NODE_ENV === "development" ? err.stack : {},
   });
 });
 

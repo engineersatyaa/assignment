@@ -13,12 +13,6 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
 
-    password: {
-      type: String,
-      minLength: 8,
-      required: true,
-    },
-
     address: {
       type: String,
       default: "",
@@ -35,10 +29,10 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-    },
+    // role: {
+    //   type: String,
+    //   enum: ["user", "admin"],
+    // },
   },
 
   { timestamps: true }
