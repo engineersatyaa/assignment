@@ -5,7 +5,7 @@ import { FiEdit } from "react-icons/fi";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Wrapper from "../components/Wrapper";
 import { publicRequest } from "../utils/requestMethod";
-import { useParams } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 
 import { MdDeleteForever } from "react-icons/md";
@@ -19,12 +19,14 @@ const listItems = [
 function Profile() {
   const [listItemClicked, setListItemClicked] = useState("User Details");
   const [showForm, setShowForm] = useState(false);
+  const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [formData, setFormData] = useState({});
   const [user, setUser] = useState({});
 
   // getting user ID from url
   const { userId } = useParams();
 
+  const navigate = useNavigate();
   console.log(formData);
 
   // fetching user data
@@ -61,6 +63,7 @@ function Profile() {
     try {
       const res = await publicRequest.delete("/users/" + userId);
       alert(res.data.msg);
+      return navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -176,7 +179,7 @@ function Profile() {
 
                   <button
                     title="Delete"
-                    onClick={deleteUser}
+                    onClick={() => setShowWarningMsg(true)}
                     className="border-none text-[22px] md:text-2xl text-red-600 md:cursor-pointer md:hover:text-black"
                   >
                     <MdDeleteForever />
@@ -319,6 +322,41 @@ function Profile() {
       </div>
 
       {/* Update form block end */}
+
+      {/* ---------------------------------------------------------------- */}
+
+      {/* Delete warning card start */}
+
+      <div
+        className={` bg-black/80 backdrop-blur-[5px]  fixed top-0 w-screen h-screen flex items-center justify-center origin-center transition-transform ease-out ${
+          showWarningMsg ? "scale-100" : "scale-0"
+        }`}
+      >
+        <div className="bg-white w-[85%] sm:w-[60%] lg:w-[45%] text-sm sm:text-base lg:text-lg h-auto p-3 py-5 shadow-2xl rounded border border-black text-center">
+          <p className="font-semibold mb-3 px-2">
+            <span className="text-red-700 font-bold">Warning</span> : Do you
+            really want to delete ?
+          </p>
+
+          <div className="flex items-center justify-center gap-5 lg:gap-8 p-2 text-white">
+            <button
+              onClick={() => setShowWarningMsg(false)}
+              className="bg-green-600 py-[6px] px-5 rounded border-none md:hover:bg-green-700"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={deleteUser}
+              className="bg-red-600 py-[6px] px-5 rounded border-none md:hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Delete warning card end */}
     </>
   );
 }
